@@ -1,45 +1,49 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AYAH Plugin\n"
-"POT-Creation-Date: 2014-12-23 00:50-0600\n"
-"PO-Revision-Date: 2014-12-23 00:50-0600\n"
+"POT-Creation-Date: 2014-12-08 12:41-0600\n"
+"PO-Revision-Date: 2014-12-08 12:43-0600\n"
 "Last-Translator: Eduardo Cortés <me@eduardocortes.mx>\n"
 "Language-Team: Xoops Mexico <xoopsmexico@gmail.com>\n"
-"Language: en\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: Y:\\www\\xoops\\modules\\rmcommon\\plugins\\ayah\n"
 
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/ayah-plugin.php:21
-msgid "Plugin to insert a \"Are You A Human\" field on comments and other forms"
+msgid ""
+"Plugin to insert a \"Are You A Human\" field on comments and other forms"
 msgstr ""
+"Plugin que inserta un captcha \"Are You A Human\" en comentarios y otros "
+"formularios"
 
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/events/rmcommon.php:55
 msgid "Please, confirm that you are a human!"
-msgstr ""
+msgstr "¡Por favor confrima que eres un humano!"
 
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/include/options.php:12
 msgid "Your publisher key"
-msgstr ""
+msgstr "Tu clave de editor"
 
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/include/options.php:13
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/include/options.php:22
 msgid "You can get it directly from your ayah account."
-msgstr ""
+msgstr "Puedes obtenerla directamente desde tu cuenta en ayah.com"
 
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/include/options.php:21
 msgid "Your scoring key"
-msgstr ""
+msgstr "Tu clave de marcador"
 
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/include/options.php:30
 msgid "Show field to site administrators?"
-msgstr ""
+msgstr "¿Mostrar el captcha a los administradores del sitio?"
 
 #: Y:\www\xoops\modules\rmcommon\plugins\ayah/include/options.php:38
 msgid "Enable debug mode?"
-msgstr ""
+msgstr "¿Activar modo debug?"

@@ -26,6 +26,7 @@ class AyahCUPlugin extends RMIPlugin
                 'stage'    => -2,
                 'name'      => 'AYAH Plugin'
             ),
+            'updateurl'     => 'http://www.xoopsmexico.net/modules/vcontrol/',
             'author'        => 'Eduardo Cortés',
             'email'            => 'i.bitcero@gmail.com',
             'web'            => 'http://eduardocortes.mx',
