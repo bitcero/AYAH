@@ -23,7 +23,7 @@ class AyahCUPlugin extends RMIPlugin
                 'major'     => 0,
                 'minor'     => 1,
                 'revision'  => 68,
-                'stage'    => -2,
+                'stage'    => -1,
                 'name'      => 'AYAH Plugin'
             ),
             'updateurl'     => 'http://www.xoopsmexico.net/modules/vcontrol/',
