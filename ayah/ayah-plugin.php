@@ -22,7 +22,7 @@ class AyahCUPlugin extends RMIPlugin
             'version'        => array(
                 'major'     => 0,
                 'minor'     => 1,
-                'revision'  => 68,
+                'revision'  => 69,
                 'stage'    => -1,
                 'name'      => 'AYAH Plugin'
             ),
@@ -90,6 +90,16 @@ class AyahCUPlugin extends RMIPlugin
         $resp = $ayah->scoreResult();
 
         return $resp;
+    }
+
+    static function getInstance(){
+        static $instance;
+
+        if(!isset($instance)){
+            $instance = new AyahCUPlugin();
+        }
+
+        return $instance;
     }
     
 }
