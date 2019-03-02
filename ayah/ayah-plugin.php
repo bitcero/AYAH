@@ -10,15 +10,15 @@
 
 class AyahCUPlugin extends RMIPlugin
 {
-    
-    function __construct(){
+    public function __construct()
+    {
         
         // Load language
         load_plugin_locale('ayah', '', 'rmcommon');
         
         $this->info = array(
             'name'            => 'AYAH Plugin',
-            'description'    => __('Plugin to insert a "Are You A Human" field on comments and other forms','ayah'),
+            'description'    => __('Plugin to insert a "Are You A Human" field on comments and other forms', 'ayah'),
             'version'        => array(
                 'major'     => 0,
                 'minor'     => 1,
@@ -32,74 +32,79 @@ class AyahCUPlugin extends RMIPlugin
             'web'            => 'http://eduardocortes.mx',
             'dir'            => 'ayah'
         );
-        
     }
     
-    public function options(){
-        
+    public function options()
+    {
         require 'include/options.php';
         return $options;
-        
     }
     
-    public function on_install(){
+    public function on_install()
+    {
         return true;
     }
     
-    public function on_uninstall(){
+    public function on_uninstall()
+    {
         return true;
     }
     
-    public function on_update(){
+    public function on_update()
+    {
         return true;
     }
     
-    public function on_activate($q){
+    public function on_activate($q)
+    {
         return true;
     }
     
-    private function set_config(){
-        
+    private function set_config()
+    {
         $config = RMSettings::plugin_settings('ayah', true);
         
-        if(!defined('AYAH_PUBLISHER_KEY'))
-            define( 'AYAH_PUBLISHER_KEY', $config->publisher );
+        if (!defined('AYAH_PUBLISHER_KEY')) {
+            define('AYAH_PUBLISHER_KEY', $config->publisher);
+        }
         
-        if(!defined('AYAH_SCORING_KEY'))
-            define( 'AYAH_SCORING_KEY', $config->scoring );
-        
+        if (!defined('AYAH_SCORING_KEY')) {
+            define('AYAH_SCORING_KEY', $config->scoring);
+        }
     }
     
-    public function show(){
+    public function show()
+    {
         $config = RMSettings::plugin_settings('ayah', true);
         $this->set_config();
         include_once(RMCPATH.'/plugins/ayah/include/ayah.php');
         $ayah = new AYAH();
-        $ayah->debug_mode($config->debug );
+        $ayah->debug_mode($config->debug);
         $field = $ayah->getPublisherHTML();
         
         return $field;
     }
     
-    public function check(){
+    public function check()
+    {
         $config = RMsettings::plugin_settings('recaptcha', true);
         $this->set_config();
         include_once(RMCPATH.'/plugins/ayah/include/ayah.php');
         $ayah = new AYAH();
-        $ayah->debug_mode($config->debug );
+        $ayah->debug_mode($config->debug);
         $resp = $ayah->scoreResult();
 
         return $resp;
     }
 
-    static function getInstance(){
+    public static function getInstance()
+    {
         static $instance;
 
-        if(!isset($instance)){
+        if (!isset($instance)) {
             $instance = new AyahCUPlugin();
         }
 
         return $instance;
     }
-    
 }

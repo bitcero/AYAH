@@ -9,8 +9,8 @@
 // --------------------------------------------------------------
 
 $options['publisher'] = array(
-        'caption'   =>  __('Your publisher key','ayah'),
-        'desc'      =>  __('You can get it directly from your ayah account.','ayah'),
+        'caption'   =>  __('Your publisher key', 'ayah'),
+        'desc'      =>  __('You can get it directly from your ayah account.', 'ayah'),
         'fieldtype'      =>  'textbox',
         'size'      =>  50,
         'valuetype' =>  'text',
@@ -18,8 +18,8 @@ $options['publisher'] = array(
 );
 
 $options['scoring'] = array(
-        'caption'   =>  __('Your scoring key','ayah'),
-        'desc'      =>  __('You can get it directly from your ayah account.','ayah'),
+        'caption'   =>  __('Your scoring key', 'ayah'),
+        'desc'      =>  __('You can get it directly from your ayah account.', 'ayah'),
         'fieldtype'      =>  'textbox',
         'size'      =>  50,
         'valuetype' =>  'text',
@@ -27,7 +27,7 @@ $options['scoring'] = array(
 );
 
 $options['show'] = array(
-        'caption'   =>  __('Show field to site administrators?','ayah'),
+        'caption'   =>  __('Show field to site administrators?', 'ayah'),
         'desc'      =>  '',
         'fieldtype'      =>  'yesno',
         'valuetype' =>  'int',
@@ -35,7 +35,7 @@ $options['show'] = array(
 );
 
 $options['debug'] = array(
-        'caption'   =>  __('Enable debug mode?','ayah'),
+        'caption'   =>  __('Enable debug mode?', 'ayah'),
         'desc'      =>  '',
         'fieldtype'      =>  'yesno',
         'valuetype' =>  'int',
