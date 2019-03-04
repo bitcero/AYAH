@@ -8,36 +8,36 @@
 // License: GPL 2.0
 // --------------------------------------------------------------
 
-$options['publisher'] = array(
-        'caption'   =>  __('Your publisher key','ayah'),
-        'desc'      =>  __('You can get it directly from your ayah account.','ayah'),
-        'fieldtype'      =>  'textbox',
-        'size'      =>  50,
-        'valuetype' =>  'text',
-        'value'   =>  ''
-);
+$options['publisher'] = [
+        'caption' => __('Your publisher key', 'ayah'),
+        'desc' => __('You can get it directly from your ayah account.', 'ayah'),
+        'fieldtype' => 'textbox',
+        'size' => 50,
+        'valuetype' => 'text',
+        'value' => '',
+];
 
-$options['scoring'] = array(
-        'caption'   =>  __('Your scoring key','ayah'),
-        'desc'      =>  __('You can get it directly from your ayah account.','ayah'),
-        'fieldtype'      =>  'textbox',
-        'size'      =>  50,
-        'valuetype' =>  'text',
-        'value'   =>  ''
-);
+$options['scoring'] = [
+        'caption' => __('Your scoring key', 'ayah'),
+        'desc' => __('You can get it directly from your ayah account.', 'ayah'),
+        'fieldtype' => 'textbox',
+        'size' => 50,
+        'valuetype' => 'text',
+        'value' => '',
+];
 
-$options['show'] = array(
-        'caption'   =>  __('Show field to site administrators?','ayah'),
-        'desc'      =>  '',
-        'fieldtype'      =>  'yesno',
-        'valuetype' =>  'int',
-        'value'   =>  1
-);
+$options['show'] = [
+        'caption' => __('Show field to site administrators?', 'ayah'),
+        'desc' => '',
+        'fieldtype' => 'yesno',
+        'valuetype' => 'int',
+        'value' => 1,
+];
 
-$options['debug'] = array(
-        'caption'   =>  __('Enable debug mode?','ayah'),
-        'desc'      =>  '',
-        'fieldtype'      =>  'yesno',
-        'valuetype' =>  'int',
-        'value'   =>  0
-);
+$options['debug'] = [
+        'caption' => __('Enable debug mode?', 'ayah'),
+        'desc' => '',
+        'fieldtype' => 'yesno',
+        'valuetype' => 'int',
+        'value' => 0,
+];
