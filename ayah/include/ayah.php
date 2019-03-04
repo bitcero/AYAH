@@ -25,9 +25,9 @@
  */
 
 // Only define the AYAH class if it does not already exist.
-if (! class_exists('AYAH')):
+if (!class_exists('AYAH')):
 
-class AYAH
+class ayah
 {
     // Set defaults for values that can be specified via the config file or passed in via __construct.
     protected $ayah_publisher_key = '';
@@ -38,28 +38,27 @@ class AYAH
 
     protected $session_secret;
 
-    protected $__valid_construct_params = array('publisher_key', 'scoring_key', 'web_service_host', 'debug_mode', 'use_curl');
-    protected $__message_buffer = array();
+    protected $__valid_construct_params = ['publisher_key', 'scoring_key', 'web_service_host', 'debug_mode', 'use_curl'];
+    protected $__message_buffer = [];
     protected $__version_number = '1.1.7';
 
     /**
      * Constructor
      * If the session secret exists in input, it grabs it
      * @param $params associative array with keys publisher_key, scoring_key, web_service_host
-     *
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         // Try to load the ayah_config.php file.
-        if (! $this->__load_config_file()) {
-            $this->__log("DEBUG", __FUNCTION__, "The ayah_config.php file is missing.");
+        if (!$this->__load_config_file()) {
+            $this->__log('DEBUG', __FUNCTION__, 'The ayah_config.php file is missing.');
         }
 
         // Get and use any valid parameters that were passed in via the $params array.
         foreach ((array)$this->__valid_construct_params as $partial_variable_name) {
             // Build the full variable name...and create an upper case version.
-            $variable_name = "ayah_" . $partial_variable_name;
-            $uc_variable_name = strtoupper($variable_name);
+            $variable_name = 'ayah_' . $partial_variable_name;
+            $uc_variable_name = mb_strtoupper($variable_name);
 
             // Check to see if it was passed in via $params.
             if (isset($params[$partial_variable_name])) {
@@ -72,47 +71,48 @@ class AYAH
         }
 
         // Generate some warnings/errors if needed variables are not set.
-        if ($this->ayah_publisher_key == "") {
-            $this->__log("ERROR", __FUNCTION__, "Warning: Publisher key is not defined.  This won't work.");
+        if ('' == $this->ayah_publisher_key) {
+            $this->__log('ERROR', __FUNCTION__, "Warning: Publisher key is not defined.  This won't work.");
         } else {
-            $this->__log("DEBUG", __FUNCTION__, "Publisher key: '$this->ayah_publisher_key'");
+            $this->__log('DEBUG', __FUNCTION__, "Publisher key: '$this->ayah_publisher_key'");
         }
-        if ($this->ayah_scoring_key == "") {
-            $this->__log("ERROR", __FUNCTION__, "Warning: Scoring key is not defined.  This won't work.");
-        } else {
-            // For security reasons, don't output the scoring key as part of the debug info.
+        if ('' == $this->ayah_scoring_key) {
+            $this->__log('ERROR', __FUNCTION__, "Warning: Scoring key is not defined.  This won't work.");
         }
-        if ($this->ayah_web_service_host == "") {
-            $this->__log("ERROR", __FUNCTION__, "Warning: Web service host is not defined.  This won't work.");
+        // For security reasons, don't output the scoring key as part of the debug info.
+
+        if ('' == $this->ayah_web_service_host) {
+            $this->__log('ERROR', __FUNCTION__, "Warning: Web service host is not defined.  This won't work.");
         } else {
-            $this->__log("DEBUG", __FUNCTION__, "AYAH Webservice host: '$this->ayah_web_service_host'");
+            $this->__log('DEBUG', __FUNCTION__, "AYAH Webservice host: '$this->ayah_web_service_host'");
         }
 
         // If available, set the session secret.
-        if (array_key_exists("session_secret", $_REQUEST)) {
-            $this->session_secret = $_REQUEST["session_secret"];
+        if (array_key_exists('session_secret', $_REQUEST)) {
+            $this->session_secret = $_REQUEST['session_secret'];
         }
     }
 
     /**
      * Returns the markup for the PlayThru
      *
+     * @param mixed $config
      * @return string
      */
-    public function getPublisherHTML($config = array())
+    public function getPublisherHTML($config = [])
     {
         // Initialize.
-        $session_secret = "";
-        $fields = array('config' => $config);
+        $session_secret = '';
+        $fields = ['config' => $config];
         $webservice_url = '/ws/setruntimeoptions/' . $this->ayah_publisher_key;
 
         // If necessary, process the config data.
-        if (! empty($config)) {
+        if (!empty($config)) {
             // Log it.
-            $this->__log("DEBUG", __FUNCTION__, "Setting runtime options...config data='".implode(",", $config)."'");
-            
+            $this->__log('DEBUG', __FUNCTION__, "Setting runtime options...config data='" . implode(',', $config) . "'");
+
             // Add the gameid to the options url.
-            if (array_key_exists("gameid", $config)) {
+            if (array_key_exists('gameid', $config)) {
                 $webservice_url .= '/' . $config['gameid'];
             }
         }
@@ -125,46 +125,45 @@ class AYAH
 
             // Build the url to the AYAH webservice.
             $url = 'https://';						// The AYAH webservice API requires https.
-            $url.= $this->ayah_web_service_host;				// Add the host.
-            $url.= "/ws/script/";						// Add the path to the API script.
-            $url.= urlencode($this->ayah_publisher_key);			// Add the encoded publisher key.
-            $url.= (empty($session_secret))? "" : "/".$session_secret;	// If set, add the session_secret.
+            $url .= $this->ayah_web_service_host;				// Add the host.
+            $url .= '/ws/script/';						// Add the path to the API script.
+            $url .= urlencode($this->ayah_publisher_key);			// Add the encoded publisher key.
+            $url .= (empty($session_secret)) ? '' : '/' . $session_secret;	// If set, add the session_secret.
 
             // Build and return the needed HTML code.
-            return "<div id='AYAH'></div><script src='". $url ."' type='text/javascript' language='JavaScript'></script>";
-        } else {
-            // Build and log a detailed message.
-            $url = "https://".$this->ayah_web_service_host.$webservice_url;
-            $message = "Unable to connect to the AYAH webservice server.  url='$url'";
-            $this->__log("ERROR", __FUNCTION__, $message);
-
-            // Build and display a helpful message to the site user.
-            $style = "padding: 10px; border: 1px solid #EED3D7; background: #F2DEDE; color: #B94A48;";
-            $message = "Unable to load the <i>Are You a Human</i> PlayThru&trade;.  Please contact the site owner to report the problem.";
-            echo "<p style=\"$style\">$message</p>\n";
+            return "<div id='AYAH'></div><script src='" . $url . "' type='text/javascript' language='JavaScript'></script>";
         }
+        // Build and log a detailed message.
+        $url = 'https://' . $this->ayah_web_service_host . $webservice_url;
+        $message = "Unable to connect to the AYAH webservice server.  url='$url'";
+        $this->__log('ERROR', __FUNCTION__, $message);
+
+        // Build and display a helpful message to the site user.
+        $style = 'padding: 10px; border: 1px solid #EED3D7; background: #F2DEDE; color: #B94A48;';
+        $message = 'Unable to load the <i>Are You a Human</i> PlayThru&trade;.  Please contact the site owner to report the problem.';
+        echo "<p style=\"$style\">$message</p>\n";
     }
 
     /**
      * Check whether the user is a human
      * Wrapper for the scoreGame API call
      *
-     * @return boolean
+     * @return bool
      */
     public function scoreResult()
     {
         $result = false;
         if ($this->session_secret) {
-            $fields = array(
+            $fields = [
                 'session_secret' => urlencode($this->session_secret),
-                'scoring_key' => $this->ayah_scoring_key
-            );
-            $resp = $this->doHttpsPostReturnJSONArray($this->ayah_web_service_host, "/ws/scoreGame", $fields);
+                'scoring_key' => $this->ayah_scoring_key,
+            ];
+            $resp = $this->doHttpsPostReturnJSONArray($this->ayah_web_service_host, '/ws/scoreGame', $fields);
             if ($resp) {
-                $result = ($resp->status_code == 1);
+                $result = (1 == $resp->status_code);
             }
         } else {
-            $this->__log("DEBUG", __FUNCTION__, "Unable to score the result.  Please check that your ayah_config.php file contains your correct publisher key and scoring key.");
+            $this->__log('DEBUG', __FUNCTION__, 'Unable to score the result.  Please check that your ayah_config.php file contains your correct publisher key and scoring key.');
         }
 
         return $result;
@@ -175,22 +174,22 @@ class AYAH
      * Called on the goal page that A and B redirect to
      * A/B Testing Specific Function
      *
-     * @return boolean
+     * @return bool
      */
     public function recordConversion()
     {
         // Build the url to the AYAH webservice..
         $url = 'https://';				// The AYAH webservice API requires https.
-        $url.= $this->ayah_web_service_host;		// Add the host.
-        $url.= "/ws/recordConversion/";			// Add the path to the API script.
-        $url.= urlencode($this->ayah_publisher_key);	// Add the encoded publisher key.
+        $url .= $this->ayah_web_service_host;		// Add the host.
+        $url .= '/ws/recordConversion/';			// Add the path to the API script.
+        $url .= urlencode($this->ayah_publisher_key);	// Add the encoded publisher key.
 
         if (isset($this->session_secret)) {
             return '<iframe style="border: none;" height="0" width="0" src="' . $url . '"></iframe>';
-        } else {
-            $this->__log("ERROR", __FUNCTION__, 'AYAH Conversion Error: No Session Secret');
-            return false;
         }
+        $this->__log('ERROR', __FUNCTION__, 'AYAH Conversion Error: No Session Secret');
+
+        return false;
     }
 
     /**
@@ -199,6 +198,7 @@ class AYAH
      * @param $path path
      * @param $fields associative array of fields
      * return JSON decoded data structure or empty data structure
+     * @param mixed $hostname
      */
     protected function doHttpsPostReturnJSONArray($hostname, $path, $fields)
     {
@@ -207,8 +207,8 @@ class AYAH
         if ($result) {
             $result = $this->doJSONArrayDecode($result);
         } else {
-            $this->__log("ERROR", __FUNCTION__, "Post to https://$hostname$path returned no result.");
-            $result = array();
+            $this->__log('ERROR', __FUNCTION__, "Post to https://$hostname$path returned no result.");
+            $result = [];
         }
 
         return $result;
@@ -217,20 +217,20 @@ class AYAH
     // Internal function; does an HTTPS post
     protected function doHttpsPost($hostname, $path, $fields)
     {
-        $result = "";
+        $result = '';
         // URLencode the post string
-        $fields_string = "";
-        foreach ($fields as $key=>$value) {
+        $fields_string = '';
+        foreach ($fields as $key => $value) {
             if (is_array($value)) {
-                if (! empty($value)) {
+                if (!empty($value)) {
                     foreach ($value as $k => $v) {
-                        $fields_string .= $key . '['. $k .']=' . $v . '&';
+                        $fields_string .= $key . '[' . $k . ']=' . $v . '&';
                     }
                 } else {
                     $fields_string .= $key . '=&';
                 }
             } else {
-                $fields_string .= $key.'='.$value.'&';
+                $fields_string .= $key . '=' . $value . '&';
             }
         }
         rtrim($fields_string, '&');
@@ -238,10 +238,10 @@ class AYAH
         // Use cURL?
         if ($this->__use_curl()) {
             // Build the cURL url.
-            $curl_url = "https://" . $hostname . $path;
+            $curl_url = 'https://' . $hostname . $path;
 
             // Log it.
-            $this->__log("DEBUG", __FUNCTION__, "Using cURl: url='$curl_url', fields='$fields_string'");
+            $this->__log('DEBUG', __FUNCTION__, "Using cURl: url='$curl_url', fields='$fields_string'");
 
             // Initialize cURL session.
             if ($ch = curl_init($curl_url)) {
@@ -259,27 +259,27 @@ class AYAH
                 curl_close($ch);
             } else {
                 // Log it.
-                $this->__log("DEBUG", __FUNCTION__, "Unable to initialize cURL: url='$curl_url'");
+                $this->__log('DEBUG', __FUNCTION__, "Unable to initialize cURL: url='$curl_url'");
             }
         } else {
             // Log it.
-            $this->__log("DEBUG", __FUNCTION__, "Using fsockopen(): fields='$fields_string'");
+            $this->__log('DEBUG', __FUNCTION__, "Using fsockopen(): fields='$fields_string'");
 
             // Build a header
-            $http_request  = "POST $path HTTP/1.1\r\n";
+            $http_request = "POST $path HTTP/1.1\r\n";
             $http_request .= "Host: $hostname\r\n";
             $http_request .= "Content-Type: application/x-www-form-urlencoded;\r\n";
-            $http_request .= "Content-Length: " . strlen($fields_string) . "\r\n";
-            $http_request .= "User-Agent: AreYouAHuman/PHP " . $this->get_version_number() . "\r\n";
+            $http_request .= 'Content-Length: ' . mb_strlen($fields_string) . "\r\n";
+            $http_request .= 'User-Agent: AreYouAHuman/PHP ' . $this->get_version_number() . "\r\n";
             $http_request .= "Connection: Close\r\n";
             $http_request .= "\r\n";
-            $http_request .= $fields_string ."\r\n";
+            $http_request .= $fields_string . "\r\n";
 
             $result = '';
-            $errno = $errstr = "";
-            $fs = fsockopen("ssl://" . $hostname, 443, $errno, $errstr, 10);
-            if (false == $fs) {
-                $this->__log("ERROR", __FUNCTION__, "Could not open socket");
+            $errno = $errstr = '';
+            $fs = fsockopen('ssl://' . $hostname, 443, $errno, $errstr, 10);
+            if (false === $fs) {
+                $this->__log('ERROR', __FUNCTION__, 'Could not open socket');
             } else {
                 fwrite($fs, $http_request);
                 while (!feof($fs)) {
@@ -292,7 +292,7 @@ class AYAH
         }
 
         // Log the result.
-        $this->__log("DEBUG", __FUNCTION__, "result='$result'");
+        $this->__log('DEBUG', __FUNCTION__, "result='$result'");
 
         // Return the result.
         return $result;
@@ -301,26 +301,26 @@ class AYAH
     // Internal function: does a JSON decode of the string
     protected function doJSONArrayDecode($string)
     {
-        $result = array();
+        $result = [];
 
-        if (function_exists("json_decode")) {
+        if (function_exists('json_decode')) {
             try {
                 $result = json_decode($string);
             } catch (Exception $e) {
-                $this->__log("ERROR", __FUNCTION__, "Exception when calling json_decode: " . $e->getMessage());
+                $this->__log('ERROR', __FUNCTION__, 'Exception when calling json_decode: ' . $e->getMessage());
                 $result = null;
             }
-        } elseif (file_Exists("json.php")) {
+        } elseif (file_exists('json.php')) {
             require_once('json.php');
             $json = new Services_JSON();
             $result = $json->decode($string);
 
             if (!is_array($result)) {
-                $this->__log("ERROR", __FUNCTION__, "Expected array; got something else: $result");
-                $result = array();
+                $this->__log('ERROR', __FUNCTION__, "Expected array; got something else: $result");
+                $result = [];
             }
         } else {
-            $this->__log("ERROR", __FUNCTION__, "No JSON decode function available.");
+            $this->__log('ERROR', __FUNCTION__, 'No JSON decode function available.');
         }
 
         return $result;
@@ -329,9 +329,10 @@ class AYAH
     /**
      * Get the current debug mode (TRUE or FALSE)
      *
-     * @return boolean
+     * @param null|mixed $mode
+     * @return bool
      */
-    public function debug_mode($mode=null)
+    public function debug_mode($mode = null)
     {
         // Set it if the mode is passed.
         if (null !== $mode) {
@@ -341,7 +342,7 @@ class AYAH
             // Display a message if debug_mode is TRUE.
             if ($mode) {
                 $version_number = $this->get_version_number();
-                $this->__log("DEBUG", "", "Debug mode is now on. (ayah.php version=$version_number)");
+                $this->__log('DEBUG', '', "Debug mode is now on. (ayah.php version=$version_number)");
 
                 // Flush the buffer.
                 $this->__flush_message_buffer();
@@ -349,12 +350,12 @@ class AYAH
         }
 
         // If necessary, set the default.
-        if (! isset($this->ayah_debug_mode) or (null == $this->ayah_debug_mode)) {
+        if (!isset($this->ayah_debug_mode) or (null === $this->ayah_debug_mode)) {
             $this->ayah_debug_mode = false;
         }
 
         // Return TRUE or FALSE.
-        return ($this->ayah_debug_mode)? true : false;
+        return ($this->ayah_debug_mode) ? true : false;
     }
 
     /**
@@ -364,13 +365,13 @@ class AYAH
      */
     public function get_version_number()
     {
-        return (isset($this->__version_number))? $this->__version_number : false;
+        return (isset($this->__version_number)) ? $this->__version_number : false;
     }
 
     /**
      * Determine whether or not cURL is available to use.
      *
-     * @return boolean
+     * @return bool
      */
     private function __use_curl()
     {
@@ -379,27 +380,29 @@ class AYAH
         } elseif (function_exists('curl_init') and function_exists('curl_exec')) {
             return true;
         }
+
         return false;
     }
 
     /**
      * Load the config file.
      *
-     * @return boolean
+     * @return bool
      */
     private function __load_config_file()
     {
         // Initialize.
         $name = 'ayah_config.php';
-        $locations = array(
+        $locations = [
             './',
-            dirname(__FILE__)."/",
-        );
+            __DIR__ . '/',
+        ];
 
         // Look for the config file in each location.
         foreach ($locations as $location) {
-            if (file_exists($location.$name)) {
-                require_once($location.$name);
+            if (file_exists($location . $name)) {
+                require_once($location . $name);
+
                 return true;
             }
         }
@@ -411,7 +414,9 @@ class AYAH
     /**
      * Log a message
      *
-     * @return null
+     * @param mixed $type
+     * @param mixed $function
+     * @param mixed $message
      */
     protected function __log($type, $function, $message)
     {
@@ -419,12 +424,12 @@ class AYAH
         $message = __CLASS__ . "::$function: " . $message;
 
         // Is it an error message?
-        if (false !== stripos($type, "error")) {
+        if (false !== mb_stripos($type, 'error')) {
             error_log($message);
         }
 
         // Build the full message.
-        $message_style = "padding: 10px; border: 1px solid #EED3D7; background: #F2DEDE; color: #B94A48;";
+        $message_style = 'padding: 10px; border: 1px solid #EED3D7; background: #F2DEDE; color: #B94A48;';
         $full_message = "<p style=\"$message_style\"><strong>$type:</strong> $message</p>\n";
 
         // Output to the screen too?
@@ -439,7 +444,7 @@ class AYAH
     private function __flush_message_buffer()
     {
         // Flush the buffer.
-        if (! empty($this->__message_buffer)) {
+        if (!empty($this->__message_buffer)) {
             foreach ($this->__message_buffer as $buffered_message) {
                 // Print the buffered message.
                 echo "$buffered_message";

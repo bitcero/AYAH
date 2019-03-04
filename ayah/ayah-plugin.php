@@ -12,84 +12,84 @@ class AyahCUPlugin extends RMIPlugin
 {
     public function __construct()
     {
-        
         // Load language
         load_plugin_locale('ayah', '', 'rmcommon');
-        
-        $this->info = array(
-            'name'            => 'AYAH Plugin',
-            'description'    => __('Plugin to insert a "Are You A Human" field on comments and other forms', 'ayah'),
-            'version'        => array(
-                'major'     => 0,
-                'minor'     => 1,
-                'revision'  => 69,
-                'stage'    => -1,
-                'name'      => 'AYAH Plugin'
-            ),
-            'updateurl'     => 'http://www.xoopsmexico.net/modules/vcontrol/',
-            'author'        => 'Eduardo Cortés',
-            'email'            => 'i.bitcero@gmail.com',
-            'web'            => 'http://eduardocortes.mx',
-            'dir'            => 'ayah'
-        );
+
+        $this->info = [
+            'name' => 'AYAH Plugin',
+            'description' => __('Plugin to insert a "Are You A Human" field on comments and other forms', 'ayah'),
+            'version' => [
+                'major' => 0,
+                'minor' => 1,
+                'revision' => 69,
+                'stage' => -1,
+                'name' => 'AYAH Plugin',
+            ],
+            'updateurl' => 'http://www.xoopsmexico.net/modules/vcontrol/',
+            'author' => 'Eduardo Cortés',
+            'email' => 'i.bitcero@gmail.com',
+            'web' => 'http://eduardocortes.mx',
+            'dir' => 'ayah',
+        ];
     }
-    
+
     public function options()
     {
-        require 'include/options.php';
+        require __DIR__ . '/include/options.php';
+
         return $options;
     }
-    
+
     public function on_install()
     {
         return true;
     }
-    
+
     public function on_uninstall()
     {
         return true;
     }
-    
+
     public function on_update()
     {
         return true;
     }
-    
+
     public function on_activate($q)
     {
         return true;
     }
-    
+
     private function set_config()
     {
         $config = RMSettings::plugin_settings('ayah', true);
-        
+
         if (!defined('AYAH_PUBLISHER_KEY')) {
             define('AYAH_PUBLISHER_KEY', $config->publisher);
         }
-        
+
         if (!defined('AYAH_SCORING_KEY')) {
             define('AYAH_SCORING_KEY', $config->scoring);
         }
     }
-    
+
     public function show()
     {
         $config = RMSettings::plugin_settings('ayah', true);
         $this->set_config();
-        include_once(RMCPATH.'/plugins/ayah/include/ayah.php');
+        include_once(RMCPATH . '/plugins/ayah/include/ayah.php');
         $ayah = new AYAH();
         $ayah->debug_mode($config->debug);
         $field = $ayah->getPublisherHTML();
-        
+
         return $field;
     }
-    
+
     public function check()
     {
         $config = RMsettings::plugin_settings('recaptcha', true);
         $this->set_config();
-        include_once(RMCPATH.'/plugins/ayah/include/ayah.php');
+        include_once(RMCPATH . '/plugins/ayah/include/ayah.php');
         $ayah = new AYAH();
         $ayah->debug_mode($config->debug);
         $resp = $ayah->scoreResult();
@@ -102,7 +102,7 @@ class AyahCUPlugin extends RMIPlugin
         static $instance;
 
         if (!isset($instance)) {
-            $instance = new AyahCUPlugin();
+            $instance = new self();
         }
 
         return $instance;
